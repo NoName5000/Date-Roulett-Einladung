@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
+<title>Date Roulette Einladung</title>
+<style>
+  :root{--bg:#1B1226;--card:#2A1D3A;--pink:#FF4F81;--text:#F6EEFB;--muted:#B4A3C8}
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;
+    background:var(--bg);color:var(--text);font:16px/1.5 system-ui,sans-serif;padding:16px}
+  main{max-width:420px;width:100%;background:var(--card);border-radius:20px;padding:28px 24px;text-align:center}
+  h1{font-size:22px;margin:0 0 8px}
+  p{color:var(--muted);margin:0 0 20px}
+  a.btn{display:block;background:var(--pink);color:#fff;text-decoration:none;font-weight:600;
+    padding:14px 18px;border-radius:14px;margin-bottom:12px}
+  a.alt{background:transparent;border:2px solid var(--pink);color:var(--text)}
+  .sub{color:var(--muted);font-size:14px;margin:0}
+  #err{display:none;color:#FFB347}
+</style>
+</head>
+<body>
+<main>
+  <h1>Einladung zu Date Roulette</h1>
+  <p id="txt">Tippe auf den Knopf, um den gemeinsamen Sync in der App einzurichten.</p>
+  <a class="btn" id="open" href="#">In Date Roulette öffnen</a>
+  <a class="btn alt" id="apk" href="dateroulette.apk">App installieren (APK)</a>
+  <p id="err">Dieser Link ist unvollständig. Bitte lass ihn dir noch einmal schicken.</p>
+  <p class="sub" id="hint">Noch nicht installiert? Erst „App installieren“ tippen, danach diesen Link noch einmal öffnen. Android fragt dabei einmalig nach der Erlaubnis für Installationen aus dem Browser.</p>
+</main>
+<script>
+// Alles hinter "#" bleibt im Browser und geht nie an einen Server.
+(function () {
+  var q = location.hash.replace(/^#/, '');
+  var p = new URLSearchParams(q);
+  var btn = document.getElementById('open');
+  if (!p.get('o') || !p.get('r') || !p.get('t')) {
+    btn.style.display = 'none';
+    document.getElementById('txt').style.display = 'none';
+    document.getElementById('err').style.display = 'block';
+    return;
+  }
+  var scheme = 'dateroulette://join?' + q;
+  var intent = 'intent://join?' + q + '#Intent;scheme=dateroulette;package=de.dateroulette.app;end';
+  var android = /android/i.test(navigator.userAgent);
+  btn.href = android ? intent : scheme;
+  // Einmal automatisch versuchen, der Knopf bleibt als Ersatz.
+  setTimeout(function () { location.href = btn.href; }, 400);
+})();
+</script>
+</body>
+</html>
